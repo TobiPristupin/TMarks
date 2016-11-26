@@ -1,0 +1,484 @@
+#: import ListItemButton kivy.uix.listview.ListItemButton
+#: import ListAdapter kivy.adapters.listadapter.ListAdapter
+#: import main main
+#: import random random
+
+
+
+<SubjectButton>:
+    deselected_color: root.check_state(self.text)
+    selected_color: [0, 0, 0, 1]
+    size: (100, "40dp")
+
+<PopupTextInput@TextInput>:
+    padding: [5, (self.height - self.line_height)/2]
+    focus: True
+    multiline: False
+    size_hint_y: .9
+    font_size: 23
+
+<PopupHelp>:
+    title: "Help"
+    size_hint: .85, .7
+
+    BoxLayout:
+        padding: 10
+        spacing: 10
+        spacing: 30
+        orientation: "horizontal"
+        Carousel:
+            direction: 'right'
+            Image:
+                source: r'tut\first_screen.jpg'
+            Image:
+                source: r'tut\subjects.jpg'
+            Image:
+                source: r'tut\selection.jpg'
+            Image:
+                source: r'tut\marks.jpg'
+            Image:
+                source: r'tut\graph.jpg' 
+            Label:
+                text: 'Errors and Suggestions\nt.marks.bds@gmail.com'
+                font_size: 30
+            Label:
+                text: 'Credits\nTobias Pristupin - 2016\nLicensed under MIT Copyright (c) 2016 Tobias Pristupin'
+                font_size: 20                
+
+        Button:
+            size_hint_x: None
+            width: "50dp"
+            text: "Close"
+            on_press: root.dismiss()
+
+<DisplaySubjectsPopup>:
+    name_input: text_input_name
+    teacher_input: text_input_teacher
+    comments_input: text_input_comments
+    title: "Add Subject"
+    size_hint: .7, .7
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Name"
+                font_size: 20
+            PopupTextInput:
+                id: text_input_name
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Teacher"
+                font_size: 20
+            PopupTextInput:
+                id: text_input_teacher
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Comments"
+                font_size: 20
+            PopupTextInput:
+                id: text_input_comments
+                text: "N/A"
+        BoxLayout:
+            spacing: 30
+            orientation: "horizontal"
+            Button:
+                pos_x: self.x *.6
+                size_hint: None, None
+                size: "110dp", "50dp"
+                text: "Close"
+                on_press: root.dismiss()
+            Button:
+                size_hint: None, None
+                size: "110dp", "50dp"
+                text: "OK"
+                on_press: root.retrieve_subject_data(), root.dismiss()
+
+<PopupInfo>:
+    name: name_label
+    teacher: teacher_label
+    comments: comments_label
+    title: "Subject information"
+    size_hint: .7, .7
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            id: name_label
+            font_size: 25
+        Label:
+            id: teacher_label
+            font_size: 25
+        Label:
+            id: comments_label
+            font_size: 25
+        BoxLayout:
+            Button:
+                size_hint: None, None
+                size: "110dp", "50dp"
+                text: "Close"
+                on_press: root.dismiss()
+
+<AddMarksPopup>:
+    mark_input: mark
+    value_input: slider_value
+    description_input: description
+    grouped_input: grouped
+    date_input: date
+    trim1_input: trim1
+    trim2_input: trim2
+    trim3_input: trim3
+    size_hint: .7, .85
+    title: "Add Marks"
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Description"
+                font_size: 20
+            PopupTextInput:
+                id: description
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Mark"
+                font_size: 20
+            PopupTextInput:
+                id: mark
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Value"
+                font_size: 20
+            Label:
+                text: str(slider_value.value)
+                size_hint_x: None
+                width: "15dp"
+            Slider:
+                id: slider_value
+                value: 1
+                min: 1
+                max: 4
+                step: 1
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Grouped"
+                font_size: 20
+            CheckBox:
+                id: grouped
+
+        BoxLayout:
+            Label:
+                text: "Date"
+                font_size: 20
+            PopupTextInput:
+                id: date
+                text: root.get_date()
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Trimester"
+                font_size: 20
+            Label:
+                size_hint_x: .2
+                text: "1st"
+            CheckBox:
+                size_hint_x: .1
+                id: trim1
+                group: "trim"
+                active: True
+            Label:
+                size_hint_x: .2
+                text: "2nd"
+            CheckBox:
+                size_hint_x: .1
+                id: trim2
+                group: "trim"
+            Label:
+                size_hint_x: .2
+                text: "3rd"
+            CheckBox:
+                size_hint_x: .1
+                id: trim3
+                group: "trim"
+        BoxLayout:
+            spacing: 30
+            orientation: "horizontal"
+            Button:
+                size_hint: None, None
+                size: "110dp", "50dp"
+                text: "Close"
+                on_press: root.dismiss()
+            Button:
+                size_hint: None, None
+                size: "110dp", "50dp"
+                text: "OK"
+                on_press: root.retrieve_marks_data(), root.dismiss()
+
+<MarkInfoPopup>:
+    size_hint: .7, .7
+    title: 'Marks info'
+    description: description_label
+    mark: mark_label
+    date: date_label
+    trim: trim_label
+    value: value_label
+    grouped: grouped_label
+
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: description_label
+            font_size: 20
+        Label:
+            id: mark_label
+            font_size: 20
+        Label:
+            id: date_label
+            font_size: 20
+        Label:
+            id: trim_label
+            font_size: 20
+        Label:
+            id: value_label
+            font_size: 20
+        Label:
+            id: grouped_label
+            font_size: 20
+        BoxLayout:
+            Button:
+                size_hint_x: None
+                width: '150dp'
+                text: 'OK'
+                on_press: root.dismiss()
+
+<MobilePopup>:
+    title: "Error"
+    size_hint: .4, .4
+    Label:
+        font_size: 20
+        text: "Sorry, this feature is only \nsupported in desktop versions \n(Windows, OSX, Linux)"
+
+
+
+
+
+
+<DisplayMarks>:
+    title: title_label
+    t1_list: t1_list_view
+    t2_list: t2_list_view
+    t3_list: t3_list_view
+    t1_avg_input: t1_avg_label
+    t2_avg_input: t2_avg_label
+    t3_avg_input: t3_avg_label
+    final_avg_input: final_avg_label
+
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgba: [.2, .2, .2, 1]
+        Rectangle:
+            size: self.size
+
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title: "TMarks"
+                with_previous: True
+                on_press: app.root.show_subjects_widget()
+            
+            ActionButton:
+                icon: 'appbar.language.python.png'  
+            ActionButton:
+                icon: "appbar.information.png"
+                on_press: app.root.open_help_popup()
+            ActionButton:
+                text: "Overview"
+                on_press: app.root.show_subjects_widget()  
+            ActionOverflow:
+                ActionButton:
+                    text: 'Info'
+                    on_press: root.open_marks_info_popup()
+                ActionButton:
+                    text: 'Delete'
+                    on_press: root.delete_mark()
+
+    BoxLayout:
+        orientation: "horizontal"
+        BoxLayout:
+            orientation: "vertical"
+
+            BoxLayout:
+                size_hint_y: None
+                height: "60dp"
+                Label:
+                    size_hint_y: None
+                    height: "50dp"
+                    font_size: 30
+                    id: title_label
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: 10
+                padding: 10
+
+                BoxLayout:
+                    orientation: "vertical"
+                    Label:
+                        text: "1st Trimester"
+                        size_hint_y: None
+                        height: "50dp"
+                        font_size: 20
+                    ListView:
+                        id: t1_list_view
+                        adapter:
+                            ListAdapter(data=[], cls=main.MarksButton)
+
+                BoxLayout:
+                    orientation: "vertical"
+                    Label:
+                        size_hint_y: None
+                        height: "50dp"
+                        text: "2nd Trimester"
+                        font_size: 20
+                    ListView:
+                        id: t2_list_view
+                        adapter:
+                            ListAdapter(data=[], cls=main.MarksButton)
+
+                BoxLayout:
+                    orientation: "vertical"
+                    Label:
+                        size_hint_y: None
+                        height: "50dp"
+                        text: "3rd Trimester"
+                        font_size: 20
+                    ListView:
+                        id: t3_list_view
+                        adapter:
+                            ListAdapter(data=[], cls=main.MarksButton)
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: "150dp"
+                BoxLayout:
+                    orientation: "horizontal"
+                    canvas:
+                        Color:
+                            rgba: .1, .1, .1, 1
+                        Rectangle:
+                            size: self.size
+                        Color:
+                            rgba: 20/255, 120/255, 1, 1
+                        Line:
+                            points: [self.width*.25, self.height, self.width*.75, self.height]
+                            width: 3
+                    Label:
+                        id: t1_avg_label
+                        font_size: 25
+                    Label:
+                        id: t2_avg_label
+                        font_size: 25
+                    Label:
+                        id: t3_avg_label
+                        font_size: 25
+                BoxLayout:
+                    size_hint_y: .3
+                    Label:
+                        id: final_avg_label
+                        font_size: 25
+
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_x: None
+            width: "50dp"
+            Button:
+                size_hint_y: 1.4
+                text: "+"
+                on_press: root.open_add_marks_popup()
+            Button:
+                text: "RR"
+                on_press: root.call_load_method(), root.update_avgs()
+
+
+<DisplaySubjects>:
+    subject_list_view: list_view
+    orientation: "vertical"
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title: "TMarks"
+                with_previous: False
+            ActionButton:
+                icon: 'appbar.language.python.png'  
+            ActionButton:
+                icon: "appbar.information.png"
+                on_press: app.root.open_help_popup()    
+            ActionOverflow:
+                ActionButton:      
+                    text: "Marks"
+                    on_press: root.show_marks_widget()
+                ActionButton:
+                    text: "Stats"
+                    on_press: root.show_stats_widget()
+                ActionButton:
+                    text: "Delete"
+                    on_press: root.delete_record()
+                ActionButton:
+                    text: "Info"
+                    on_press: root.open_info_popup()
+
+    BoxLayout:
+        orientation: "horizontal"
+        canvas:
+            Color:
+                rgba: [.2, .2, .2, 1]
+            Rectangle:
+                size: self.size
+
+        BoxLayout:
+            orientation: "vertical"
+            BoxLayout:   
+                size_hint_y: None
+                height: "70dp"
+                orientation: "horizontal"
+                Label:
+                    size_hint_y: None
+                    height: "70dp"
+                    text: "Overview"
+                    font_size: 32
+
+            ListView:
+                id: list_view
+                adapter:
+                    ListAdapter(data=[], cls=main.SubjectButton)
+        BoxLayout:
+            size_hint_x: None
+            width: "50dp"
+            orientation: "vertical"
+            Button:
+                text: "+"
+                size_hint_y: 1.4
+                on_press: root.open_add_popup()
+            Button:
+                text: 'RR'
+                on_press: root.load_records()
+
+
+
+MarksRoot:
+<MarksRoot>:
+    BoxLayout:
+        orientation: "vertical"
+        DisplaySubjects
