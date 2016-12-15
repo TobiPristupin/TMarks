@@ -37,13 +37,13 @@
             Image:
                 source: r'tut\marks.jpg'
             Image:
-                source: r'tut\graph.jpg' 
+                source: r'tut\graph.jpg'
             Label:
                 text: 'Errors and Suggestions\nt.marks.bds@gmail.com'
                 font_size: 30
             Label:
                 text: 'Credits\nTobias Pristupin - 2016\nLicensed under MIT Copyright (c) 2016 Tobias Pristupin'
-                font_size: 20                
+                font_size: 20
 
         Button:
             size_hint_x: None
@@ -297,15 +297,15 @@
                 title: "TMarks"
                 with_previous: True
                 on_press: app.root.show_subjects_widget()
-            
+
             ActionButton:
-                icon: 'appbar.language.python.png'  
+                icon: 'appbar.language.python.png'
             ActionButton:
                 icon: "appbar.information.png"
                 on_press: app.root.open_help_popup()
             ActionButton:
                 text: "Overview"
-                on_press: app.root.show_subjects_widget()  
+                on_press: app.root.show_subjects_widget()
             ActionOverflow:
                 ActionButton:
                     text: 'Info'
@@ -421,12 +421,12 @@
                 title: "TMarks"
                 with_previous: False
             ActionButton:
-                icon: 'appbar.language.python.png'  
+                icon: 'appbar.language.python.png'
             ActionButton:
                 icon: "appbar.information.png"
-                on_press: app.root.open_help_popup()    
+                on_press: app.root.open_help_popup()
             ActionOverflow:
-                ActionButton:      
+                ActionButton:
                     text: "Marks"
                     on_press: root.show_marks_widget()
                 ActionButton:
@@ -449,7 +449,7 @@
 
         BoxLayout:
             orientation: "vertical"
-            BoxLayout:   
+            BoxLayout:
                 size_hint_y: None
                 height: "70dp"
                 orientation: "horizontal"

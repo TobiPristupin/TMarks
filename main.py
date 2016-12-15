@@ -1,22 +1,18 @@
 import kivy
 #This Software is licensed under the MIT License. More information on LICENSE.txt.
-
 kivy.require('1.9.1')
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.listview import ListItemButton
 from kivy.uix.popup import Popup
 from kivy.properties import ObjectProperty
-from kivy.uix.image import Image
-from kivy.uix.carousel import Carousel
 from kivy.core.audio import SoundLoader
-import os
+from kivy.clock import Clock
 import json
 import datetime
-import tkinter
 
 
-MOBILE_VERSION = False
+MOBILE_VERSION = True
 if not MOBILE_VERSION :
     import matplotlib.pyplot as plt
     from matplotlib import style
@@ -27,7 +23,7 @@ def play_sound():
     if SOUND :
         error_sound.play()
 
-        
+
 
 #JSON
 class MarksJson():
@@ -36,7 +32,8 @@ class MarksJson():
         store = json.loads(jfile.read())
 
     def add_subject(self, subject, teacher, comments):
-        self.store[subject] = { 'info':{
+        if subject not in self.store:
+            self.store[subject] = { 'info':{
                                 'teacher': teacher,
                                 'comments': comments}
                                 ,'marks':{
@@ -44,17 +41,24 @@ class MarksJson():
                                 '2': {},
                                 '3': {}
                                }}
-        self.save_json()
+            self.save_json()
+        else :
+            play_sound()
 
     def add_marks(self, subject, mark, value, desc, grouped, trim, date):
-        self.store[subject]['marks'][trim][str(desc)] = {'value': value,
-                                                        'grouped': grouped,
-                                                        'date': date,
-                                                        'mark': []}
-        for i in range(value):
-            self.store[subject]['marks'][trim][str(desc)]['mark'].append(mark)
+        if desc not in self.store[subject]["marks"]["1"] and \
+        desc not in self.store[subject]["marks"]["2"] and \
+        desc not in self.store[subject]["marks"]["3"] :
+            self.store[subject]['marks'][trim][str(desc)] = {'value': value,
+                                                            'grouped': grouped,
+                                                            'date': date,
+                                                            'mark': []}
+            for i in range(value):
+                self.store[subject]['marks'][trim][str(desc)]['mark'].append(mark)
 
-        self.save_json()
+            self.save_json()
+        else :
+            play_sound()
 
     def save_json(self):
         with open(self.json_file, 'w') as jfile :
@@ -85,8 +89,8 @@ class MarksJson():
 class Average():
     json = MarksJson()
 
-    def __init__(self):
-        super(Average, self).__init__()
+    def __init__(self, **kwargs):
+        super(Average, self).__init__(**kwargs)
         self.store = self.json.get_json()
 
     def get_term_avg(self, subject, term):
@@ -137,7 +141,7 @@ class Average():
         try :
             return round(sum(avgs) / len(avgs), 2)
         except ZeroDivisionError :
-            return 0        
+            return 0
 
 
 
@@ -154,12 +158,12 @@ class SubjectButton(ListItemButton):
             self.term2 = self.avg.get_term_avg(subject=subject, term='2')
             self.term3 = self.avg.get_term_avg(subject=subject, term='3')
             final_avg = self.avg.calculate_final_avg(self.term1, self.term2, self.term3)
-            if final_avg > 6 :
-                return [0, 1, 0, 1]
-            elif 0 < final_avg < 6 :
-                return [1, 0, 0, 1]
-            elif final_avg == -1 :
+            if final_avg == 0 :
                 return [0, 0, 1, 1]
+            elif final_avg >= 6 :
+                return [0, 1, 0, 1]
+            elif final_avg < 6 :
+                return [1, 0, 0, 1]
         return [0, 0, 1, 1]
 
 
@@ -220,8 +224,8 @@ class AddMarksPopup(Popup):
     trim2_input = ObjectProperty()
     trim3_input = ObjectProperty()
 
-    def __init__(self, current_subject, **kwargs):
-        super(AddMarksPopup, self).__init__(**kwargs)
+    def __init__(self, current_subject):
+        super(AddMarksPopup, self).__init__()
         self.subject = current_subject
 
     def retrieve_marks_data(self):
@@ -347,7 +351,7 @@ class DisplaySubjects(BoxLayout):
             info_pop = PopupInfo(selected)
             info_pop.open()
         else:
-            play_sound()    
+            play_sound()
 
     def open_mobile_popup(self):
         mob_pop = MobilePopup()
@@ -368,8 +372,8 @@ class DisplayMarks(BoxLayout):
     t3_avg_input = ObjectProperty()
     final_avg_input = ObjectProperty()
 
-    def __init__(self, subject, **kwargs):
-        super(DisplayMarks, self).__init__(**kwargs)
+    def __init__(self, subject):
+        super(DisplayMarks, self).__init__()
         self.subject = subject
         self.title.text = "{} Marks".format(subject)
         self.update_avgs()
@@ -400,7 +404,7 @@ class DisplayMarks(BoxLayout):
             self.listview._trigger_reset_populate()
             self.json.del_json_mark(subject=self.subject, key=self.key, trim=self.check_selection()[1])
         except:
-            play_sound()    
+            play_sound()
 
     def load_records(self, trimester, list_view):
         self.loaded_marks = [mark for mark in self.store[self.subject]['marks'][trimester]]
@@ -433,13 +437,13 @@ class DisplayMarks(BoxLayout):
         add_marks_popup.open()
 
     def open_marks_info_popup(self):
-        try: 
+        try:
             marks_info_popup = MarkInfoPopup(   current_subject=self.subject,
                                             key=self.check_selection()[0],
                                             trim=self.check_selection()[1])
             marks_info_popup.open()
         except:
-            play_sound()    
+            play_sound()
 
 
 class DisplayStats():
@@ -488,17 +492,16 @@ class MarksRoot(BoxLayout):
 
     def open_help_popup(self):
         help_pop = PopupHelp()
-        help_pop.open()    
+        help_pop.open()
 
-    
+
 
 
 class MarksApp(App):
     def build(self):
-        return MarksRoot()        
+        return MarksRoot()
 
 
 if __name__ == '__main__' :
     app = MarksApp()
     app.run()
-
