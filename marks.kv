@@ -15,7 +15,7 @@
     focus: True
     multiline: False
     size_hint_y: .9
-    font_size: 23
+    font_size: 21
 
 <PopupHelp>:
     title: "Help"
@@ -23,8 +23,7 @@
 
     BoxLayout:
         padding: 10
-        spacing: 10
-        spacing: 30
+        spacing: 40
         orientation: "horizontal"
         Carousel:
             direction: 'right'
@@ -39,11 +38,11 @@
             Image:
                 source: r'tut\graph.jpg'
             Label:
-                text: 'Errors and Suggestions\nt.marks.bds@gmail.com'
-                font_size: 30
-            Label:
-                text: 'Credits\nTobias Pristupin - 2016\nLicensed under MIT Copyright (c) 2016 Tobias Pristupin'
+                text: "Version 1.0 issues\n-  Subject colors won't update unless restarted\n\nWill be fixed soon.\n\n\nErrors and Suggestions\nt.marks.bds@gmail.com"
                 font_size: 20
+            Label:
+                text: 'Credits\nTobias Pristupin - 2016\nLicensed under MIT Copyright \n(c) 2016 Tobias Pristupin'
+                font_size: 25
 
         Button:
             size_hint_x: None
@@ -59,7 +58,7 @@
     size_hint: .7, .7
     BoxLayout:
         orientation: "vertical"
-        padding: 20
+        padding: 10
         spacing: 20
         BoxLayout:
             orientation: "horizontal"
@@ -131,32 +130,31 @@
     trim1_input: trim1
     trim2_input: trim2
     trim3_input: trim3
-    size_hint: .7, .85
+    size_hint: .75, .9
     title: "Add Marks"
-    BoxLayout:
-        orientation: "vertical"
+    GridLayout:
+        spacing: 10
+        padding: [0, 10, 0, 0]
+        cols: 2
+        rows: 8
 
+        Label:
+            text: "Description"
+            font_size: 20
+        PopupTextInput:
+            id: description
+
+        Label:
+            text: "Mark"
+            font_size: 20
+        PopupTextInput:
+            id: mark
+
+        Label:
+            text: "Value"
+            font_size: 20
         BoxLayout:
             orientation: "horizontal"
-            Label:
-                text: "Description"
-                font_size: 20
-            PopupTextInput:
-                id: description
-
-        BoxLayout:
-            orientation: "horizontal"
-            Label:
-                text: "Mark"
-                font_size: 20
-            PopupTextInput:
-                id: mark
-
-        BoxLayout:
-            orientation: "horizontal"
-            Label:
-                text: "Value"
-                font_size: 20
             Label:
                 text: str(slider_value.value)
                 size_hint_x: None
@@ -168,27 +166,27 @@
                 max: 4
                 step: 1
 
+        Label:
+            text: "Grouped"
+            font_size: 20
+
+        CheckBox:
+            id: grouped
+            group: "other"
+            size_hint_x:.25
+
+        Label:
+            text: "Date"
+            font_size: 20
+        PopupTextInput:
+            id: date
+            text: root.get_date()
+
+        Label:
+            text: "Trimester"
+            font_size: 20
         BoxLayout:
             orientation: "horizontal"
-            Label:
-                text: "Grouped"
-                font_size: 20
-            CheckBox:
-                id: grouped
-
-        BoxLayout:
-            Label:
-                text: "Date"
-                font_size: 20
-            PopupTextInput:
-                id: date
-                text: root.get_date()
-
-        BoxLayout:
-            orientation: "horizontal"
-            Label:
-                text: "Trimester"
-                font_size: 20
             Label:
                 size_hint_x: .2
                 text: "1st"
@@ -211,6 +209,7 @@
                 size_hint_x: .1
                 id: trim3
                 group: "trim"
+
         BoxLayout:
             spacing: 30
             orientation: "horizontal"

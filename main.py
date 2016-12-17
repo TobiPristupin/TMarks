@@ -106,7 +106,6 @@ class Average():
             if grouped :
                 for k in range(value):
                     grouped_marks.append(float(mark))
-
             else :
                 for k in range(value):
                     non_grouped_marks.append(float(mark))
@@ -223,13 +222,14 @@ class AddMarksPopup(Popup):
     trim1_input = ObjectProperty()
     trim2_input = ObjectProperty()
     trim3_input = ObjectProperty()
+    trimestal_input = ObjectProperty()
 
     def __init__(self, current_subject):
         super(AddMarksPopup, self).__init__()
         self.subject = current_subject
 
     def retrieve_marks_data(self):
-        if self.trim1_input.active : self.trimester = "1" #Tried loops and list comps ended up with this.
+        if self.trim1_input.active : self.trimester = "1"
         elif self.trim2_input.active : self.trimester = "2"
         else : self.trimester = "3"
         marks_data = {  'mark': self.mark_input.text,
